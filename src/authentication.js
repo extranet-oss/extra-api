@@ -18,7 +18,7 @@ module.exports = function () {
   app.passport.use('token', new AuthTokenStrategy(
     function (token, done) {
       // todo: token storage
-      if (token == 'secret') {
+      if (config.token.validTokens.find(x => x == token)) {
         // todo: add godmode user
         done(null, {});
       }
