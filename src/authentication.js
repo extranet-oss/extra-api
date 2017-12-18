@@ -38,7 +38,11 @@ module.exports = function () {
     }
   ));
 
-  const sessionMiddleware = session({secret: config.secret});
+  const sessionMiddleware = session({
+    secret: config.secret,
+    resave: false,
+    saveUninitialized: false
+  });
 
   app.get('/auth/azuread',
     sessionMiddleware,
