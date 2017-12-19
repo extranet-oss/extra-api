@@ -3,6 +3,7 @@ const jwt = require('feathers-authentication-jwt');
 const AuthTokenStrategy = require('passport-auth-token').Strategy;
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
 const querystring = require('querystring');
 
 
@@ -39,6 +40,7 @@ module.exports = function () {
   ));
 
   const sessionMiddleware = session({
+    store: new RedisStore(config.store.redis),
     secret: config.secret,
     resave: false,
     saveUninitialized: false
