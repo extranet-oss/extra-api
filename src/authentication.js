@@ -31,7 +31,7 @@ module.exports = function () {
   app.passport.use('azuread', new OIDCStrategy(config.azuread,
     function(iss, sub, profile, accessToken, refreshToken, done) {
       if (!profile.oid) {
-        return done(new Error("No oid found"), null);
+        return done(new Error('No oid found'), null);
       }
 
       // Todo : login user from upn
@@ -51,7 +51,7 @@ module.exports = function () {
     (req, res, next) => {
       // register redirect_uri in session
       let redirect_uri;
-      if (req.query.hasOwnProperty("redirect_uri") && config.azuread.returnURLs.find(x => x==req.query.redirect_uri))
+      if (req.query.hasOwnProperty('redirect_uri') && config.azuread.returnURLs.find(x => x==req.query.redirect_uri))
         redirect_uri = req.query.redirect_uri;
       else
         redirect_uri = config.azuread.returnURLs[0];
@@ -69,7 +69,7 @@ module.exports = function () {
   app.get('/auth/azuread/callback',
     sessionMiddleware,
     (req, res, next) => {
-      if (!req.session.hasOwnProperty("azuread_failureRedirect") || !req.session.hasOwnProperty("azuread_successRedirect"))
+      if (!req.session.hasOwnProperty('azuread_failureRedirect') || !req.session.hasOwnProperty('azuread_successRedirect'))
         res.redirect(`${config.azuread.returnURLs[0]}?success=false`);
 
       authentication.express.authenticate('azuread', {
