@@ -11,6 +11,7 @@ module.exports = function () {
 
   const options = {
     name: 'pictures',
+    id: 'uuid',
     Model,
     paginate
   };

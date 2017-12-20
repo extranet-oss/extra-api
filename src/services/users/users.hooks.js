@@ -7,8 +7,8 @@ const auth = authenticate('jwt');
 const restrict = [
   auth,
   restrictToOwner({
-    idField: 'id',
-    ownerField: 'id'
+    idField: 'uuid',
+    ownerField: 'uuid'
   })
 ];
 
