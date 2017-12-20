@@ -50,7 +50,7 @@
     "mysql2": "^1.5.1",
     "passport-auth-token": "^1.0.1",
     "passport-azure-ad": "^3.0.8",
-    "sequelize": "^4.28.1",
+    "sequelize": "^4.28.5",
     "serve-favicon": "^2.4.5",
     "winston": "^2.4.0"
   },

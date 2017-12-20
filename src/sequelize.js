@@ -7,7 +7,10 @@ module.exports = function () {
     dialect: 'mariadb',
     logging: false,
     define: {
-      freezeTableName: true
+      freezeTableName: true,
+      underscored: true,
+      timestamps: true,
+      rowFormat: 'DYNAMIC'
     }
   });
   const oldSetup = app.setup;
@@ -27,6 +30,7 @@ module.exports = function () {
 
     // Sync to the database
     sequelize.sync();
+    //sequelize.sync({force: true});
 
     return result;
   };
