@@ -1,9 +1,57 @@
 {
-  "host": "localhost",
+  "host": "api.dev.tryextra.net",
   "port": 3030,
   "public": "../public/",
   "paginate": {
     "default": 10,
     "max": 50
+  },
+  "authentication": {
+    "secret": "{random string}",
+    "strategies": [
+      "jwt",
+      "token"
+    ],
+    "path": "/authentication",
+    "service": "users",
+    "jwt": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "api.dev.tryextra.net",
+      "subject": "anonymous",
+      "issuer": "api.dev.tryextra.net",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "azuread": {
+      "identityMetadata": "https://login.microsoftonline.com/{tenant guid}/.well-known/openid-configuration",
+      "clientID": "{app id}",
+      "clientSecret": "{app secret}",
+      "responseType": "code",
+      "responseMode": "query",
+      "redirectUrl": "https://api.dev.tryextra.net/auth/azuread/callback",
+      "passReqToCallback": false,
+      "returnURLs": [
+        "https://dev.tryextra.net/login/callback"
+      ]
+    },
+    "token": {
+      "validTokens": [
+        "{random string}"
+      ]
+    },
+    "store": {
+      "redis": {
+        "url": "{redis server url}",
+        "prefix": "extra-api:auth:sess"
+      }
+    }
+  },
+  "mariadb": "{mariadb server url}",
+  "urls": {
+    "front": "https://dev.tryextra.net",
+    "static": "https://static.dev.tryextra.net",
+    "api": "https://api.tryextra.net"
   }
 }
