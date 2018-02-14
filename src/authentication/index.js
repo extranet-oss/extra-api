@@ -20,7 +20,10 @@ module.exports = function () {
   app.service(config.path).hooks({
     before: {
       create: [
-        authentication.hooks.authenticate(config.strategies)
+        authentication.hooks.authenticate(config.strategies),
+        (hook) => {
+          hook.params.jwt = Object.assign({ subject: hook.params.user }, hook.params.jwt);
+        }
       ],
       remove: [
         authentication.hooks.authenticate('jwt')

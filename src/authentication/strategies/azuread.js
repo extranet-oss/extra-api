@@ -25,8 +25,8 @@ module.exports = function () {
       .then(matches => {
         if (matches.total == 0)
           done(null, false, { message: 'Your account is not yet registered on the intranet.' })
-
-        done(null, 'user', { 'userId': matches.data[0].id })
+        else
+          done(null, 'user', { userId: matches.data[0].id })
       })
       .catch(err => done(err));
     }
@@ -72,12 +72,7 @@ module.exports = function () {
         if (result.fail) res.redirect(`${req.session.azuread_failureRedirect}&${querystring.stringify(result.challenge)}`);
 
         console.log(result)
-        app.service(config.path).create({}, {
-          jwt: {
-            subject: result.data.user
-          },
-          payload: result.data.payload
-        }).then(result => {
+        app.service(config.path).create({}, result.data).then(result => {
           res.redirect(`${req.session.azuread_successRedirect}&${querystring.stringify(result)}`);
         }).catch(() => {
           res.redirect(req.session.azuread_failureRedirect);

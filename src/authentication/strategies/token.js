@@ -9,12 +9,10 @@ module.exports = function () {
   app.passport.use('token', new AuthTokenStrategy(
     function (token, done) {
       // todo: token storage
-      if (config.token.validTokens.find(x => x == token)) {
-        // todo: add godmode user
-        done(null, {});
-      }
-
-      done(null, false);
+      if (config.token.validTokens.find(x => x == token))
+        done(null, 'god');
+      else
+        done(null, false);
     }
   ));
 };
