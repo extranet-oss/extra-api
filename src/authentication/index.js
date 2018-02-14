@@ -1,5 +1,5 @@
-const authentication = require('feathers-authentication');
-const jwt = require('feathers-authentication-jwt');
+const authentication = require('@feathersjs/authentication');
+const jwt = require('@feathersjs/authentication-jwt');
 const token = require('./strategies/token.js');
 const azuread = require('./strategies/azuread.js');
 

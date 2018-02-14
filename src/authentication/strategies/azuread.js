@@ -1,3 +1,4 @@
+const authentication = require('@feathersjs/authentication');
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
