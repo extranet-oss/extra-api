@@ -1,34 +1,21 @@
-const commonHooks = require('feathers-hooks-common');
-const { restrictToOwner } = require('feathers-authentication-hooks');
 const { authenticate } = require('@feathersjs/authentication').hooks;
 
 
 const auth = authenticate('jwt');
-const restrict = [
-  auth,
-  restrictToOwner({
-    idField: 'uuid',
-    ownerField: 'uuid'
-  })
-];
 
 module.exports = {
   before: {
-    all: [],
-    find: [ auth ],
-    get: [ ...restrict ],
+    all: [ auth ],
+    find: [  ],
+    get: [  ],
     create: [  ],
-    update: [ ...restrict ],
-    patch: [ ...restrict ],
-    remove: [ ...restrict ]
+    update: [  ],
+    patch: [  ],
+    remove: [  ]
   },
 
   after: {
     all: [
-      commonHooks.when(
-        hook => hook.params.provider,
-        commonHooks.discard('password')
-      )
     ],
     find: [],
     get: [],
