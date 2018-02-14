@@ -4,19 +4,31 @@ const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const querystring = require('querystring');
 
-
 module.exports = function () {
   const app = this;
   const config = app.get('authentication');
 
   app.passport.use('azuread', new OIDCStrategy(config.azuread,
     function(iss, sub, profile, accessToken, refreshToken, done) {
-      if (!profile.oid) {
-        return done(new Error('No oid found'), null);
+
+      if (!profile.oid || !profile.upn) {
+        return done(null, false, { message: 'Invalid azuread account.' });
       }
 
-      // Todo : login user from upn
-      done(null, {});
+      const users = app.service('users');
+
+      users.find({
+        query: {
+          intra_id: profile.upn
+        }
+      })
+      .then(matches => {
+        if (matches.total == 0)
+          done(null, false, { message: 'Your account is not yet registered on the intranet.' })
+
+        done(null, 'user', { 'userId': matches.data[0].id })
+      })
+      .catch(err => done(err));
     }
   ));
 
@@ -53,26 +65,24 @@ module.exports = function () {
       if (!req.session.hasOwnProperty('azuread_failureRedirect') || !req.session.hasOwnProperty('azuread_successRedirect'))
         res.redirect(`${config.azuread.returnURLs[0]}?success=false`);
 
-      authentication.express.authenticate('azuread', {
-        failureRedirect: req.session.azuread_failureRedirect,
+      app.passport.authenticate('azuread', {
         session:false
-      })(req, res, next);
-    },
-    function(req, res) {
-      const data = {};
-      const params = {};
+      })(req)
+      .then(result => {
+        if (result.fail) res.redirect(`${req.session.azuread_failureRedirect}&${querystring.stringify(result.challenge)}`);
 
-      // Todo : passing the right payload to authenticate service
-      app.service(config.path).create(data, params).then(result => {
-        res.data = result;
-
-        // Todo : setting success callback or something
-        res.redirect(`${req.session.azuread_successRedirect}&${querystring.stringify(result)}`);
-      }).catch(() => {
-
-        // Todo : setting error callback or something
-        res.redirect(req.session.azuread_failureRedirect);
-      });
+        console.log(result)
+        app.service(config.path).create({}, {
+          jwt: {
+            subject: result.data.user
+          },
+          payload: result.data.payload
+        }).then(result => {
+          res.redirect(`${req.session.azuread_successRedirect}&${querystring.stringify(result)}`);
+        }).catch(() => {
+          res.redirect(req.session.azuread_failureRedirect);
+        })
+      })
     }
   );
 };
