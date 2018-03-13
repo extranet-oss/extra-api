@@ -1,5 +1,5 @@
 const authentication = require('@feathersjs/authentication');
-const jwt = require('@feathersjs/authentication-jwt');
+const jwt = require('./strategies/jwt.js');
 const token = require('./strategies/token.js');
 const azuread = require('./strategies/azuread.js');
 
@@ -10,7 +10,7 @@ module.exports = function () {
 
   // Set up authentication with the secret
   app.configure(authentication(config));
-  app.configure(jwt());
+  app.configure(jwt);
   app.configure(token);
   app.configure(azuread);
 
