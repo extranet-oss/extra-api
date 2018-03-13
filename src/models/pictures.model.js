@@ -8,10 +8,11 @@ module.exports = function (app) {
   const pictures = sequelizeClient.define('pictures', {
 
     // picture identifiers
-    uuid: {
+    id: {
       type: DataTypes.UUID,
       allowNull: false,
       unique: true,
+      primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
 

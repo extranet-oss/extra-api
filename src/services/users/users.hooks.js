@@ -1,5 +1,4 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
-const { alterItems } = require('feathers-hooks-common');
 
 
 const auth = authenticate('jwt');
@@ -16,12 +15,7 @@ module.exports = {
   },
 
   after: {
-    all: [
-      alterItems(rec => {
-        rec.id = rec.uuid;
-        delete rec.uuid;
-      })
-    ],
+    all: [],
     find: [],
     get: [],
     create: [],

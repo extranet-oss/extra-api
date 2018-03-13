@@ -8,10 +8,11 @@ module.exports = function (app) {
   const users = sequelizeClient.define('users', {
 
     // user identifiers
-    uuid: {
+    id: {
       type: DataTypes.UUID,
       allowNull: false,
       unique: true,
+      primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
     intra_id: {
