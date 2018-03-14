@@ -7,6 +7,7 @@ const uid2 = require('uid2');
 class Service {
   constructor (options) {
     this.options = options || {};
+    this.prefix = options.name;
 
     if (!options.store) {
       throw new Error(`No storage method passed`);
@@ -25,7 +26,7 @@ class Service {
 
   async get (id, params) {
     return new Promise((resolve, reject) => {
-      this.client.get(id, function(err, reply) {
+      this.client.get(this.prefix + id, function(err, reply) {
         if (err) return reject(err);
         if (!reply) return reject(new errors.NotFound());
 
@@ -49,7 +50,7 @@ class Service {
 
       // we'll might need to verify if id is not already existing
 
-      this.client.set(data.id, payload, "EX", 10 * 60, "NX", function(err, reply) {
+      this.client.set(this.prefix + data.id, payload, "EX", 10 * 60, "NX", function(err, reply) {
         if (err) return reject(err);
 
         resolve(data);
@@ -67,7 +68,7 @@ class Service {
 
   async remove (id, params) {
     return new Promise((resolve, reject) => {
-      this.client.del(id, function(err, reply) {
+      this.client.del(this.prefix + id, function(err, reply) {
         if (err) return reject(err);
 
         resolve({ id });
