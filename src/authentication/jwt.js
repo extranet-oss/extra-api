@@ -37,8 +37,7 @@ class CustomVerifier {
   }
 }
 
-module.exports = function () {
-  const app = this;
+module.exports = function (app) {
   const config = app.get('authentication');
 
   app.configure(jwt({

@@ -1,0 +1,14 @@
+<h1>Authorize {{client.name}} to access {{user.username}}</h1>
+{{#each error}}
+error: {{this}}<br>
+{{/each}}
+<br>
+scopes: {{scopes}}<br>
+<br>
+<form action="{{oauth.endpoints.decision}}" method="post">
+  <input type="hidden" name="transaction_id" value="{{transactionID}}">
+  <button name="continue" value="1" type="submit">Accept</button>
+  <button name="cancel" value="1" type="submit">Decline</button>
+  <a href="{{azuread_url}}">This is not me</a>
+</form>
+<small><pre>transactionID: {{transactionID}}</pre></small>

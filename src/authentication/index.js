@@ -1,26 +1,42 @@
 const authentication = require('@feathersjs/authentication');
-const jwt = require('./strategies/jwt.js');
-const token = require('./strategies/token.js');
-const azuread = require('./strategies/azuread.js');
+const cookieParser = require('cookie-parser')
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+const merge = require('lodash.merge');
+const flash = require('connect-flash');
+const jwt = require('./jwt.js');
+const azuread = require('./azuread');
+const oauth = require('./oauth');
 
 
-module.exports = function () {
-  const app = this;
-  const config = app.get('authentication');
+module.exports = function (app) {
+  const authConfig = app.get('authentication');
+  const sessionConfig = app.get('session');
+
+  // Set up middlewares used on authorization pages
+  const middlewares = [
+    cookieParser(sessionConfig.secret),
+    session(merge(sessionConfig, {
+      store: new RedisStore(sessionConfig.store.redis)
+    })),
+    flash()
+  ];
 
   // Set up authentication with the secret
-  app.configure(authentication(config));
+  app.configure(authentication(authConfig));
+
+  // Set up authentication strategies
   app.configure(jwt);
-  app.configure(token);
-  app.configure(azuread);
+  app.configure(azuread(middlewares));
+  app.configure(oauth(middlewares));
 
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
   // to create a new valid JWT (e.g. local or oauth2)
-  app.service(config.path).hooks({
+  app.service(authConfig.path).hooks({
     before: {
       create: [
-        authentication.hooks.authenticate(config.strategies),
+        authentication.hooks.authenticate('jwt'),
         (hook) => {
           hook.params.jwt = Object.assign({ subject: hook.params.user }, hook.params.jwt);
         }

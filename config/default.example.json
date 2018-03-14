@@ -8,12 +8,7 @@
   },
   "authentication": {
     "secret": "{random string}",
-    "strategies": [
-      "jwt",
-      "token"
-    ],
-    "path": "/authentication",
-    "service": "users",
+    "path": "/auth/token",
     "jwt": {
       "header": {
         "typ": "access"
@@ -23,29 +18,50 @@
       "issuer": "api.dev.tryextra.net",
       "algorithm": "HS256",
       "expiresIn": "1d"
-    },
-    "azuread": {
-      "identityMetadata": "https://login.microsoftonline.com/{tenant guid}/.well-known/openid-configuration",
-      "clientID": "{app id}",
-      "clientSecret": "{app secret}",
-      "responseType": "code",
-      "responseMode": "query",
-      "redirectUrl": "https://api.dev.tryextra.net/auth/azuread/callback",
-      "passReqToCallback": false,
-      "returnURLs": [
-        "https://dev.tryextra.net/login/callback"
-      ]
-    },
-    "token": {
-      "validTokens": [
-        "{random string}"
-      ]
+    }
+  },
+  "session": {
+    "secret": "{random string}",
+    "name": "extra-api:sess",
+    "cookie": {
+      "httpOnly": true,
+      "sameSite": true,
+      "signed": true,
+      "secure": false
     },
     "store": {
       "redis": {
         "url": "{redis server url}",
-        "prefix": "extra-api:auth:sess"
+        "prefix": "extra-api:sess:"
       }
+    },
+    "resave": false,
+    "saveUninitialized": false
+  },
+  "azuread": {
+    "identityMetadata": "https://login.microsoftonline.com/{tenant guid}/.well-known/openid-configuration",
+    "clientID": "{app id}",
+    "clientSecret": "{app secret}",
+    "responseType": "code",
+    "responseMode": "query",
+    "redirectUrl": "https://api.dev.tryextra.net/auth/azuread/callback",
+    "passReqToCallback": false,
+    "endpoints": {
+      "auth": "/auth/azuread",
+      "callback": "/auth/azuread/callback"
+    }
+  },
+  "oauth": {
+    "store": {
+      "redis": {
+        "url": "{redis server url}",
+        "prefix": "extra-api:oauth:"
+      }
+    },
+    "endpoints": {
+      "authorize": "/oauth/authorize",
+      "decision": "/oauth/authorize/decision",
+      "token": "/oauth/token"
     }
   },
   "mariadb": "{mariadb server url}",
