@@ -45,6 +45,7 @@
     "feathers-hooks-common": "^4.3.0",
     "feathers-sequelize": "^3.0.0",
     "helmet": "^3.11.0",
+    "jsonschema": "^1.2.2",
     "mysql": "^2.15.0",
     "mysql2": "^1.5.2",
     "passport-auth-token": "^1.0.1",
