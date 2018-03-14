@@ -1,7 +1,7 @@
 const errors = require('@feathersjs/errors');
 const merge = require('lodash.merge');
 const redis = require('redis');
-const randomString = require('randomstring');
+const uid2 = require('uid2');
 
 /* eslint-disable no-unused-vars */
 class Service {
@@ -42,7 +42,7 @@ class Service {
     }
 
     return new Promise((resolve, reject) => {
-      var id = randomString.generate(512);
+      var id = uid2(512);
       var payload = JSON.stringify(merge(data, {
         id,
         expires: Date.now() + 10 * 60 * 1000 // 10 minutes validity
