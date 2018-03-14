@@ -44,13 +44,12 @@ class Service {
     return new Promise((resolve, reject) => {
       var id = uid2(512);
       var payload = JSON.stringify(merge(data, {
-        id,
-        expires: Date.now() + 10 * 60 * 1000 // 10 minutes validity
+        id
       }));
 
       // we'll might need to verify if id is not already existing
 
-      this.client.set(data.id, payload, function(err, reply) {
+      this.client.set(data.id, payload, "EX", 10 * 60, "NX", function(err, reply) {
         if (err) return reject(err);
 
         resolve(data);
