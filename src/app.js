@@ -25,6 +25,9 @@ const app = express(feathers());
 
 // Load app configuration
 app.configure(configuration());
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
 // Enable CORS, security, compression, favicon and body parsing
 app.use(cors());
 app.use(helmet());

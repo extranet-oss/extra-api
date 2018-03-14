@@ -44,6 +44,7 @@
     "feathers-authentication-hooks": "^0.1.6",
     "feathers-hooks-common": "^4.3.0",
     "feathers-sequelize": "^3.0.0",
+    "hbs": "^4.0.1",
     "helmet": "^3.11.0",
     "jsonschema": "^1.2.2",
     "mysql": "^2.15.0",
