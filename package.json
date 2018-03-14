@@ -50,6 +50,8 @@
     "mysql2": "^1.5.2",
     "passport-auth-token": "^1.0.1",
     "passport-azure-ad": "^3.0.10",
+    "randomstring": "^1.1.5",
+    "redis": "^2.8.0",
     "sequelize": "^4.33.4",
     "winston": "^2.4.0"
   },
