@@ -17,7 +17,6 @@ module.exports = function (schema) {
     }
 
     var result = validate(context.data, schema);
-    console.log(result);
 
     if (!result.valid) {
       var error_messages = {};
