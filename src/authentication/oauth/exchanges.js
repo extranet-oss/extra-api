@@ -10,35 +10,35 @@ module.exports = function (app, server) {
 
     // Retrieve code metadata
     authorization_codes.get(code)
-    .then((data) => {
+      .then((data) => {
 
-      // Invalidate the code
-      authorization_codes.remove(code);
+        // Invalidate the code
+        authorization_codes.remove(code);
 
-      // Check if request is valid according to code metadata
-      if (client.id !== data.client_id) { return done(null, false); }
-      if (redirectURI !== data.redirect_uri) { return done(null, false); }
+        // Check if request is valid according to code metadata
+        if (client.id !== data.client_id) { return done(null, false); }
+        if (redirectURI !== data.redirect_uri) { return done(null, false); }
 
-      // Create JWT
-      app.service(app.get('authentication').path).create({}, {
-        user: 'client',
-        payload: {
-          clientId: data.client_id,
-          userId: data.user_id,
-          scopes: data.scopes
-        }
-      }).then(result => {
-        done(null, result);
+        // Create JWT
+        app.service(app.get('authentication').path).create({}, {
+          user: 'client',
+          payload: {
+            clientId: data.client_id,
+            userId: data.user_id,
+            scopes: data.scopes
+          }
+        }).then(result => {
+          done(null, result);
+        })
+          .catch((err) => {
+            done(err);
+          });
+
       })
       .catch((err) => {
+        if (err instanceof errors.NotFound) return done(null, false);
         done(err);
-      })
-
-    })
-    .catch((err) => {
-      if (err instanceof errors.NotFound) return done(null, false);
-      done(err);
-    })
+      });
   }));
 
 };

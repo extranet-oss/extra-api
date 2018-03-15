@@ -35,14 +35,14 @@ module.exports = function (app, server, middlewares) {
       const clients = app.service('oauth/clients');
 
       clients.get(clientID)
-      .then((data) => {
-        if (data.redirect_uris.indexOf(redirectURI) == -1) { return done(null, false); }
+        .then((data) => {
+          if (data.redirect_uris.indexOf(redirectURI) == -1) { return done(null, false); }
 
-        return done(null, data, redirectURI);
-      })
-      .catch((err) => {
-        done(err);
-      })
+          return done(null, data, redirectURI);
+        })
+        .catch((err) => {
+          done(err);
+        });
     }),
 
     // Show authorize dialog
@@ -78,7 +78,7 @@ module.exports = function (app, server, middlewares) {
     // Finalize authorization
     server.decision((req, done) => {
       // scopes can be modified here
-      return done(null, {})
+      return done(null, {});
     })
   );
 

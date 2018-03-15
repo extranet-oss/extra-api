@@ -14,11 +14,11 @@ module.exports = function (app, server) {
       user_id: user.id,
       scopes: areq.scope
     })
-    .then((data) => {
-      done(null, data.id);
-    })
-    .catch((err) => {
-      done(err);
-    })
+      .then((data) => {
+        done(null, data.id);
+      })
+      .catch((err) => {
+        done(err);
+      });
   }));
 };

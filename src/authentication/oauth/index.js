@@ -8,8 +8,6 @@ const endpoints = require('./endpoints.js');
 module.exports = function (middlewares) {
 
   return (app) => {
-    const config = app.get('oauth');
-
     // Set up client password strategy used on token endpoint
     app.passport.use(new ClientPasswordStrategy((clientId, clientSecret, done) => {
       const clients = app.service('oauth/clients');
@@ -20,13 +18,13 @@ module.exports = function (middlewares) {
           secret: clientSecret
         }
       })
-      .then(matches => {
-        if (matches.total == 0)
-          done(null, false);
-        else
-          done(null, matches.data[0]);
-      })
-      .catch(err => done(err));
+        .then(matches => {
+          if (matches.total == 0)
+            done(null, false);
+          else
+            done(null, matches.data[0]);
+        })
+        .catch(err => done(err));
     }));
 
 
@@ -39,14 +37,14 @@ module.exports = function (middlewares) {
           id: id
         }
       })
-      .then(matches => {
-        if (matches.total == 0)
-          done(null, false);
-        else
-          done(null, matches.data[0]);
-      })
-      .catch(err => done(err));
-    }))
+        .then(matches => {
+          if (matches.total == 0)
+            done(null, false);
+          else
+            done(null, matches.data[0]);
+        })
+        .catch(err => done(err));
+    }));
 
 
     // Create oauth2 server
@@ -65,13 +63,13 @@ module.exports = function (middlewares) {
           id: id
         }
       })
-      .then(matches => {
-        if (matches.total == 0)
-          done(null, false);
-        else
-          done(null, matches.data[0]);
-      })
-      .catch(err => done(err));
+        .then(matches => {
+          if (matches.total == 0)
+            done(null, false);
+          else
+            done(null, matches.data[0]);
+        })
+        .catch(err => done(err));
     });
 
     grants(app, server);
@@ -80,5 +78,5 @@ module.exports = function (middlewares) {
 
     // register oauth2 server endpoints
     endpoints(app, server, middlewares);
-  }
+  };
 };

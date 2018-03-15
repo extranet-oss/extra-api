@@ -1,8 +1,5 @@
 const authentication = require('@feathersjs/authentication');
 const errors = require('@feathersjs/errors');
-const merge = require('lodash.merge');
-const url = require('url');
-const querystring = require('querystring');
 
 module.exports = function (app, middlewares) {
   const config = app.get('azuread');
@@ -55,7 +52,7 @@ module.exports = function (app, middlewares) {
     }),
 
     // we have a success, login user in session
-    (req, res, next) => {
+    (req, res) => {
       req.session.user = req.user.id;
       res.redirect(req.session.next);
     },

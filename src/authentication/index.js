@@ -1,5 +1,5 @@
 const authentication = require('@feathersjs/authentication');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const merge = require('lodash.merge');

@@ -76,7 +76,7 @@ module.exports = function (app) {
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
 
-    this.belongsTo(models.users, {as: "owner"});
+    this.belongsTo(models.users, {as: 'owner'});
     this.belongsTo(models.pictures);
   };
 

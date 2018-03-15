@@ -8,7 +8,7 @@ class CustomVerifier {
     this.service = typeof options.service === 'string' ? app.service(options.service) : options.service;
 
     if (!this.service) {
-      throw new Error(`options.service does not exist.\n\tMake sure you are passing a valid service path or service instance and it is initialized before @feathersjs/authentication-jwt.`);
+      throw new Error('options.service does not exist.\n\tMake sure you are passing a valid service path or service instance and it is initialized before @feathersjs/authentication-jwt.');
     }
 
     this.verify = this.verify.bind(this);
@@ -31,15 +31,13 @@ class CustomVerifier {
       const newPayload = { [`${this.options.entity}Id`]: id };
       return done(null, entity, newPayload);
     })
-    .catch(error => {
-      return done(error);
-    });
+      .catch(error => {
+        return done(error);
+      });
   }
 }
 
 module.exports = function (app) {
-  const config = app.get('authentication');
-
   app.configure(jwt({
     Verifier: CustomVerifier
   }));

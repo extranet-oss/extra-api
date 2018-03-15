@@ -1,4 +1,3 @@
-const authentication = require('@feathersjs/authentication');
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 const endpoints = require('./endpoints.js');
 
@@ -22,18 +21,18 @@ module.exports = function (middlewares) {
             intra_id: profile.upn
           }
         })
-        .then(matches => {
-          if (matches.total == 0)
-            done(null, false, 'Your account is not yet registered on the intranet.')
-          else
-            done(null, matches.data[0])
-        })
-        .catch(err => done(err));
+          .then(matches => {
+            if (matches.total == 0)
+              done(null, false, 'Your account is not yet registered on the intranet.');
+            else
+              done(null, matches.data[0]);
+          })
+          .catch(err => done(err));
       }
     ));
 
 
     // register azuread login endpoints
     endpoints(app, middlewares);
-  }
+  };
 };

@@ -46,7 +46,7 @@ SessionStrategy.prototype.authenticate = function(req, options) {
   options = options || {};
 
   var self = this,
-      su;
+    su;
   if (req.session) {
     su = req.session.user;
   }
