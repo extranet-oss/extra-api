@@ -20,12 +20,12 @@ module.exports = function (fields = []) {
       });
     }
 
-    if (context.type == 'before')
+    if (context.type == 'before' && context.method == 'create' && context.method == 'update' && context.method == 'patch')
       process_fields(context.data);
-    else if (context.type == 'after' && context.method == 'get')
-      process_fields(context.result);
     else if (context.type == 'after' && context.method == 'find')
       context.result.data.forEach((data) => process_fields(data));
+    else if (context.type == 'after')
+      process_fields(context.result);
 
     return context;
   };
