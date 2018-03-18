@@ -28,7 +28,7 @@ module.exports = function (app, server) {
             scopes: data.scopes
           }
         }).then(result => {
-          done(null, result);
+          done(null, result.accessToken);
         })
           .catch((err) => {
             done(err);
