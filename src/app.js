@@ -46,7 +46,12 @@ app.configure(authentication);
 app.configure(services);
 // Configure a middleware for 404s and the error handler
 app.use(notFound());
-app.use(handler());
+app.use(handler({
+  html: (err, req, res, next) => {
+    res.set('Content-Type', 'text/html');
+    res.render('error', err);
+  }
+}));
 
 app.hooks(appHooks);
 
