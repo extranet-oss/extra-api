@@ -50,7 +50,6 @@
     "helmet": "^3.11.0",
     "jsonschema": "^1.2.2",
     "lodash": "^4.17.5",
-    "mysql": "^2.15.0",
     "mysql2": "^1.5.2",
     "oauth2orize": "^1.11.0",
     "passport-auth-token": "^1.0.1",

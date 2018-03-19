@@ -64,7 +64,7 @@
       "token": "/oauth/token"
     }
   },
-  "mariadb": "{mariadb server url}",
+  "mysql": "{mariadb server url}",
   "urls": {
     "front": "https://dev.tryextra.net",
     "static": "https://static.dev.tryextra.net",

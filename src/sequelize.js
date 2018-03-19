@@ -2,9 +2,9 @@ const Sequelize = require('sequelize');
 
 module.exports = function () {
   const app = this;
-  const connectionString = app.get('mariadb');
+  const connectionString = app.get('mysql');
   const sequelize = new Sequelize(connectionString, {
-    dialect: 'mariadb',
+    dialect: 'mysql',
     logging: false,
     define: {
       freezeTableName: true,
