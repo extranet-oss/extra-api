@@ -3,7 +3,7 @@ const jsonifyFields = require('../../hooks/jsonify-fields');
 
 module.exports = {
   before: {
-    all: [ authenticate('jwt'), jsonifyFields('redirect_uris') ],
+    all: [ authenticate('jwt'), jsonifyFields(['redirect_uris', 'required_permissions']) ],
     find: [],
     get: [],
     create: [],
@@ -13,7 +13,7 @@ module.exports = {
   },
 
   after: {
-    all: [ jsonifyFields('redirect_uris') ],
+    all: [ jsonifyFields(['redirect_uris', 'required_permissions']) ],
     find: [],
     get: [],
     create: [],

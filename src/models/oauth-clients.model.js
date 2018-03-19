@@ -43,10 +43,9 @@ module.exports = function (app) {
       allowNull: false,
       defaultValue: false
     },
-    required_permission_level: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-      defaultValue: 0
+    required_permissions: {
+      type: DataTypes.TEXT('long'),
+      allowNull: false
     },
     trusted: {
       type: DataTypes.BOOLEAN,

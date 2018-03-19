@@ -47,10 +47,9 @@ module.exports = function (app) {
     suspended_reason: {
       type: DataTypes.STRING
     },
-    permission_level: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-      defaultValue: 0
+    permissions: {
+      type: DataTypes.TEXT('long'),
+      allowNull: false
     }
 
   }, {
