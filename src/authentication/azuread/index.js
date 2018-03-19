@@ -23,9 +23,13 @@ module.exports = function (middlewares) {
         })
           .then(matches => {
             if (matches.total == 0)
-              done(null, false, 'Your account is not yet registered on the intranet.');
-            else
-              done(null, matches.data[0]);
+              return done(null, false, 'Your account is not yet registered on the intranet.');
+
+            // deny login if user is suspended
+            if (matches.data[0].suspended)
+              return done(null, false, `Account suspended: ${matches.data[0].suspended_reason ? matches.data[0].suspended_reason : 'no info'}`)
+
+            done(null, matches.data[0]);
           })
           .catch(err => done(err));
       }
