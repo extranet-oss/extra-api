@@ -3,9 +3,15 @@ const errors = require('@feathersjs/errors');
 const url = require('url');
 const querystring = require('querystring');
 const omit = require('lodash.omit');
+const ConnectSequence = require('connect-sequence')
 
 module.exports = function (app, server, middlewares) {
   const config = app.get('oauth');
+
+  const decisionMiddleware = server.decision((req, done) => {
+      // scopes can be modified here
+      return done(null, {});
+    });
 
   // Authorize dialog endpoint
   app.get(config.endpoints.authorize,
@@ -52,7 +58,18 @@ module.exports = function (app, server, middlewares) {
     }),
 
     // Show authorize dialog
-    (req, res) => {
+    (req, res, next) => {
+      // special case for trusted clients, we automatically authorize the request
+      if (req.oauth2.client.trusted) {
+        req.body.transaction_id = req.oauth2.transactionID;
+
+        // Create a new middleware sequence processing decision
+        var seq = new ConnectSequence(req, res, next)
+        seq.appendList(decisionMiddleware);
+        seq.run();
+        return;
+      }
+
       res.render('dialog', {
         transactionID: req.oauth2.transactionID,
         user: req.user,
@@ -82,10 +99,7 @@ module.exports = function (app, server, middlewares) {
     },
 
     // Finalize authorization
-    server.decision((req, done) => {
-      // scopes can be modified here
-      return done(null, {});
-    })
+    decisionMiddleware
   );
 
 
