@@ -11,7 +11,7 @@ module.exports = function (app, middlewares) {
     // inject next url into session & force logout user
     (req, res, next) => {
       // next url
-      if (!req.query.hasOwnProperty('next'))
+      if (!req.query.next)
         throw new errors.BadRequest('missing required "next" parameter');
       req.session.next = req.query.next;
 
@@ -31,7 +31,7 @@ module.exports = function (app, middlewares) {
     (err, req, res, next) => {
       // don't redirect if no session
       if (!req.session || !req.session.next)
-        next(err);
+        return next(err);
 
       req.flash('error', err.message);
       res.redirect(req.session.next);
@@ -45,7 +45,7 @@ module.exports = function (app, middlewares) {
 
     // ensure we have a next url
     (req, res, next) => {
-      if (!req.session.hasOwnProperty('next'))
+      if (!req.session || !req.session.next)
         throw new errors.BadRequest('missing required "next" parameter');
 
       next();
@@ -64,9 +64,9 @@ module.exports = function (app, middlewares) {
 
     // catch any error and flash it since feathers override doesn't support for flashes
     (err, req, res, next) => {
-      // ignore badrequest thrown by upper middleware
+      // don't redirect if no session
       if (!req.session || !req.session.next)
-        next(err);
+        return next(err);
 
       req.flash('error', err.message);
       res.redirect(req.session.next);
