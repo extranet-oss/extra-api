@@ -3,6 +3,11 @@
 
 // eslint-disable-next-line no-unused-vars
 module.exports = function (fields = []) {
+
+  if (!Array.isArray(fields)) {
+    fields = [ fields ];
+  }
+
   return async context => {
 
     if (context.type != 'before' && context.type != 'after') {
