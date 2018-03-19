@@ -1,5 +1,8 @@
 const authentication = require('@feathersjs/authentication');
 const errors = require('@feathersjs/errors');
+const url = require('url');
+const querystring = require('querystring');
+const omit = require('lodash.omit');
 
 module.exports = function (app, server, middlewares) {
   const config = app.get('oauth');
@@ -13,8 +16,11 @@ module.exports = function (app, server, middlewares) {
 
     // Check if user is logged in, if not, show login screen
     (req, res, next) => {
+      var next_parsed = url.parse(req.url, true),
+        next_url = `${next_parsed.pathname}?${querystring.stringify(omit(next_parsed.query, ['bypass']))}`
+
       var azuread = app.get('azuread').endpoints.auth;
-      req.azuread_url = `${azuread}?next=${encodeURIComponent(req.url)}`;
+      req.azuread_url = `${azuread}?next=${encodeURIComponent(next_url)}`;
 
       if (!req.isAuthenticated || !req.isAuthenticated()) {
 
