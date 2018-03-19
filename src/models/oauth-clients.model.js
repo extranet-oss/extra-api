@@ -22,6 +22,11 @@ module.exports = function (app) {
       allowNull: false,
       unique: false
     },
+    validity_token: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+      unique: false
+    },
 
     // client settings
     confidential: {
@@ -31,23 +36,22 @@ module.exports = function (app) {
     },
     redirect_uris: {
       type: DataTypes.TEXT('long'),
-      allowNull: false,
-      /*get() {
-        return typeof this.getDataValue(field) === 'string' ? JSON.parse(this.getDataValue(field)) : this.getDataValue(field);
-      },
-      set(data) {
-        this.setDataValue('redirect_uris', JSON.stringify(data));
-      }*/
+      allowNull: false
     },
-    default_scopes: {
-      type: DataTypes.TEXT('long'),
+    listed: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      /*get() {
-        return typeof this.getDataValue(field) === 'string' ? JSON.parse(this.getDataValue(field)) : this.getDataValue(field);
-      },
-      set(data) {
-        this.setDataValue('default_scopes', JSON.stringify(data));
-      }*/
+      defaultValue: false
+    },
+    required_permission_level: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+      defaultValue: 0
+    },
+    trusted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     },
 
     // client info
