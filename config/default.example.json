@@ -25,9 +25,9 @@
     "name": "extra-api:sess",
     "cookie": {
       "httpOnly": true,
-      "sameSite": true,
+      "sameSite": false,
       "signed": true,
-      "secure": false
+      "secure": true
     },
     "store": {
       "redis": {
