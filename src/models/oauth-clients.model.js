@@ -29,11 +29,6 @@ module.exports = function (app) {
     },
 
     // client settings
-    confidential: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    },
     redirect_uris: {
       type: DataTypes.TEXT('long'),
       allowNull: false
