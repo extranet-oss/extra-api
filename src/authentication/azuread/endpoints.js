@@ -8,11 +8,16 @@ module.exports = function (app, middlewares) {
   app.get(config.endpoints.auth,
     middlewares,
 
-    // inject next url into session
+    // inject next url into session & force logout user
     (req, res, next) => {
+      // next url
       if (!req.query.hasOwnProperty('next'))
         throw new errors.BadRequest('missing required "next" parameter');
       req.session.next = req.query.next;
+
+      // logout user
+      if (req.session.hasOwnProperty('user'))
+        delete req.session.user;
 
       next();
     },
