@@ -3,7 +3,8 @@ const errors = require('@feathersjs/errors');
 const url = require('url');
 const querystring = require('querystring');
 const omit = require('lodash.omit');
-const ConnectSequence = require('connect-sequence')
+const ConnectSequence = require('connect-sequence');
+const { AuthorizationError } = require('oauth2orize');
 
 module.exports = function (app, server, middlewares) {
   const config = app.get('oauth');
@@ -47,11 +48,19 @@ module.exports = function (app, server, middlewares) {
     server.authorize({ userProperty }, (clientID, redirectURI, done) => {
       const clients = app.service('oauth/clients');
 
-      clients.get(clientID)
-        .then((data) => {
-          if (data.redirect_uris.indexOf(redirectURI) == -1) { return done(null, false); }
+      clients.find({
+        query: {
+          id: clientID
+        }
+      })
+        .then(matches => {
+          if (matches.total == 0)
+            return done(null, false);
 
-          return done(null, data, redirectURI);
+          if (matches.data[0].redirect_uris.indexOf(redirectURI) == -1)
+            return done(new errors.BadRequest('Invalid redirect URI'));
+
+          return done(null, matches.data[0], redirectURI);
         })
         .catch((err) => {
           done(err);
@@ -80,6 +89,14 @@ module.exports = function (app, server, middlewares) {
         error: req.flash('error'),
         azuread_url: req.azuread_url
       });
+    },
+
+    // Custom error handler to convert oauth2orize error back to feathers errors
+    (err, req, res, next) => {
+      if (err instanceof AuthorizationError) {
+        err = new errors[err.status](err);
+      }
+      next(err)
     }
   );
 
@@ -100,7 +117,15 @@ module.exports = function (app, server, middlewares) {
     },
 
     // Finalize authorization
-    decisionMiddleware
+    decisionMiddleware,
+
+    // Custom error handler to convert oauth2orize error back to feathers errors
+    (err, req, res, next) => {
+      if (err instanceof AuthorizationError) {
+        err = new errors[err.status](err);
+      }
+      next(err)
+    }
   );
 
 

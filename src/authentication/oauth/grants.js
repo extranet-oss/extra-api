@@ -1,4 +1,5 @@
 const oauth2orize = require('oauth2orize');
+const errors = require('@feathersjs/errors');
 
 module.exports = function (app, server) {
 
@@ -6,6 +7,9 @@ module.exports = function (app, server) {
   server.grant(oauth2orize.grant.code((client, redirectURI, user, ares, areq, done) => {
 
     const authorization_codes = app.service('oauth/authorization-codes');
+
+    if (!areq.scope)
+      return done(new errors.BadRequest('Missing required parameter: scope'));
 
     // create code according to request infos
     authorization_codes.create({
