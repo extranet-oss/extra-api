@@ -1,10 +1,10 @@
-const { authenticate } = require('@feathersjs/authentication').hooks;
+const { disallow } = require('feathers-hooks-common');
 const validateJsonSchema = require('../../hooks/validate-json-schema');
 const model = require('../../models/oauth-authorization-codes.model');
 
 module.exports = {
   before: {
-    all: [ authenticate('jwt') ],
+    all: [ disallow('external') ],
     find: [],
     get: [],
     create: [ validateJsonSchema(model) ],
