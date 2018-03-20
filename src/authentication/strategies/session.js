@@ -1,8 +1,7 @@
 /**
  * Module dependencies.
  */
-var pause = require('pause')
-  , util = require('util')
+var util = require('util')
   , Strategy = require('passport-strategy');
 
 
@@ -35,8 +34,6 @@ util.inherits(SessionStrategy, Strategy);
  * state across requests.  If a login session has been established, `req.user`
  * will be populated with the current user.
  *
- * This strategy is registered automatically by Passport.
- *
  * @param {Object} req
  * @param {Object} options
  * @api protected
@@ -52,23 +49,14 @@ SessionStrategy.prototype.authenticate = function(req, options) {
   }
 
   if (su || su === 0) {
-    // NOTE: Stream pausing is desirable in the case where later middleware is
-    //       listening for events emitted from request.  For discussion on the
-    //       matter, refer to: https://github.com/jaredhanson/passport/pull/106
 
-    var paused = options.pauseStream ? pause(req) : null;
-    this._deserializeUser(su, function(err, user) {
+    this._deserializeUser(su, function(err, user, info) {
       if (err) { return self.error(err); }
       if (!user) {
         delete req.session.user;
+        self.pass();
       } else {
-        // TODO: Remove instance access
-        var property = /*req._passport.instance._userProperty || */'user';
-        req[property] = user;
-      }
-      self.pass();
-      if (paused) {
-        paused.resume();
+        self.success(user, info);
       }
     });
   } else {

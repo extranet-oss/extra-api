@@ -57,7 +57,6 @@
     "passport-azure-ad": "^3.0.10",
     "passport-oauth2-client-password": "^0.1.2",
     "passport-strategy": "^1.0.0",
-    "pause": "^0.1.0",
     "redis": "^2.8.0",
     "sequelize": "^4.33.4",
     "uid2": "0.0.3",

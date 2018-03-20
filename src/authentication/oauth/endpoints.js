@@ -7,8 +7,9 @@ const ConnectSequence = require('connect-sequence')
 
 module.exports = function (app, server, middlewares) {
   const config = app.get('oauth');
+  const userProperty = app.get('authentication').entity;
 
-  const decisionMiddleware = server.decision((req, done) => {
+  const decisionMiddleware = server.decision({ userProperty }, (req, done) => {
       // scopes can be modified here
       return done(null, {});
     });
@@ -28,7 +29,7 @@ module.exports = function (app, server, middlewares) {
       var azuread = app.get('azuread').endpoints.auth;
       req.azuread_url = `${azuread}?next=${encodeURIComponent(next_url)}`;
 
-      if (!req.isAuthenticated || !req.isAuthenticated()) {
+      if (!req.authenticated) {
 
         // login prompt can be bypassed with query parameter
         if (req.query.bypass)
@@ -43,7 +44,7 @@ module.exports = function (app, server, middlewares) {
     },
 
     // Start authorize process, we need to verify if client is valid
-    server.authorize((clientID, redirectURI, done) => {
+    server.authorize({ userProperty }, (clientID, redirectURI, done) => {
       const clients = app.service('oauth/clients');
 
       clients.get(clientID)
@@ -72,7 +73,7 @@ module.exports = function (app, server, middlewares) {
 
       res.render('dialog', {
         transactionID: req.oauth2.transactionID,
-        user: req.user,
+        user: req.oauth2.user,
         client: req.oauth2.client,
         scopes: req.oauth2.req.scope,
         oauth: config,
@@ -92,7 +93,7 @@ module.exports = function (app, server, middlewares) {
 
     // Check if user is logged in, if not, error
     (req, res, next) => {
-      if (!req.isAuthenticated || !req.isAuthenticated()) {
+      if (!req.authenticated) {
         throw new errors.NotAuthenticated();
       }
       next();

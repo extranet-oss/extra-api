@@ -3,6 +3,7 @@ const errors = require('@feathersjs/errors');
 
 module.exports = function (app, middlewares) {
   const config = app.get('azuread');
+  const userProperty = app.get('authentication').entity;
 
   // Auth endpoint: redirects user to azuread
   app.get(config.endpoints.auth,
@@ -58,7 +59,7 @@ module.exports = function (app, middlewares) {
 
     // we have a success, login user in session
     (req, res) => {
-      req.session.user = req.user.id;
+      req.session.user = req[userProperty].id;
       res.redirect(req.session.next);
     },
 

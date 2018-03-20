@@ -9,6 +9,7 @@
   "authentication": {
     "secret": "{random string}",
     "path": "/auth/token",
+    "entity": "auth",
     "jwt": {
       "header": {
         "typ": "access"

@@ -2,9 +2,10 @@ const oauth2orize = require('oauth2orize');
 const errors = require('@feathersjs/errors');
 
 module.exports = function (app, server) {
+  const userProperty = app.get('authentication').entity;
 
   // Setup authorization_code grant exchange
-  server.exchange(oauth2orize.exchange.code((client, code, redirectURI, done) => {
+  server.exchange(oauth2orize.exchange.code({ userProperty }, (client, code, redirectURI, done) => {
 
     const authorization_codes = app.service('oauth/authorization-codes');
 
