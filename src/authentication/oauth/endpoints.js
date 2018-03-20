@@ -72,6 +72,10 @@ module.exports = function (app, server, middlewares) {
     (req, res, next) => {
       const authorizations = app.service('oauth/authorizations');
 
+      // Check required user permissions
+      if (difference(req.oauth2.client.required_permissions, req.oauth2.user.permissions).length > 0)
+        throw new errors.Forbidden('You do not have permission to use this app');
+
       // special case where we automatically authorize the request
       // - if the client is trusted
       // - if the client has already been authorized, and has the same scopes
