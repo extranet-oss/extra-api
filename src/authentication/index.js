@@ -4,6 +4,7 @@ const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const merge = require('lodash.merge');
 const flash = require('connect-flash');
+const { disallow } = require('feathers-hooks-common');
 const jwt = require('./jwt.js');
 const azuread = require('./azuread');
 const oauth = require('./oauth');
@@ -35,15 +36,7 @@ module.exports = function (app) {
   // to create a new valid JWT (e.g. local or oauth2)
   app.service(authConfig.path).hooks({
     before: {
-      create: [
-        authentication.hooks.authenticate('jwt'),
-        (hook) => {
-          hook.params.jwt = Object.assign({ subject: hook.params.user }, hook.params.jwt);
-        }
-      ],
-      remove: [
-        authentication.hooks.authenticate('jwt')
-      ]
+      all: [ disallow('external') ]
     }
   });
 };
