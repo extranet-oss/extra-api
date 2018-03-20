@@ -1,5 +1,6 @@
 const oauth2orize = require('oauth2orize');
 const errors = require('@feathersjs/errors');
+const gen_tokens = require('./gen_tokens.js');
 
 module.exports = function (app, server) {
 
@@ -24,5 +25,15 @@ module.exports = function (app, server) {
       .catch((err) => {
         done(err);
       });
+  }));
+
+  // Setup token grant (implicit)
+  server.grant(oauth2orize.grant.token((client, user, ares, areq, done) => {
+
+    if (!areq.scope)
+      return done(new errors.BadRequest('Missing required parameter: scope'));
+
+    // Generate tokens
+    gen_tokens(app, client, user, areq.scope, false, done);
   }));
 };

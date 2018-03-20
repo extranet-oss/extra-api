@@ -44,4 +44,11 @@ module.exports = function (app, server) {
       });
   }));
 
+  // Setup client_credentials exchange
+  server.exchange(oauth2orize.exchange.clientCredentials({ userProperty }, (client, scope, done) => {
+
+      // Generate tokens
+      gen_tokens(app, client, null, scope, true, done);
+  }));
+
 };
