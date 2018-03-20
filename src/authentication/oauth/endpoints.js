@@ -3,6 +3,7 @@ const errors = require('@feathersjs/errors');
 const url = require('url');
 const querystring = require('querystring');
 const omit = require('lodash.omit');
+const difference = require('lodash/difference');
 const ConnectSequence = require('connect-sequence');
 const { AuthorizationError } = require('oauth2orize');
 
@@ -69,26 +70,47 @@ module.exports = function (app, server, middlewares) {
 
     // Show authorize dialog
     (req, res, next) => {
-      // special case for trusted clients, we automatically authorize the request
-      if (req.oauth2.client.trusted) {
-        req.body.transaction_id = req.oauth2.transactionID;
+      const authorizations = app.service('oauth/authorizations');
 
-        // Create a new middleware sequence processing decision
-        var seq = new ConnectSequence(req, res, next)
-        seq.appendList(decisionMiddleware);
-        seq.run();
-        return;
-      }
+      // special case where we automatically authorize the request
+      // - if the client is trusted
+      // - if the client has already been authorized, and has the same scopes
+      authorizations.find({
+        query: {
+          user_id: req.oauth2.user.id,
+          client_id: req.oauth2.client.id
+        }
+      }).then((matches) => {
+        // Check if new scopes were requested
+        var pass = false,
+          scopes = req.oauth2.req.scope;
+        if (matches.total != 0) {
+          scopes = difference(req.oauth2.req.scope, matches.data[0].scopes);
+          pass = scopes.length == 0;
+        }
 
-      res.render('dialog', {
-        transactionID: req.oauth2.transactionID,
-        user: req.oauth2.user,
-        client: req.oauth2.client,
-        scopes: req.oauth2.req.scope,
-        oauth: config,
-        error: req.flash('error'),
-        azuread_url: req.azuread_url
-      });
+        if (pass || req.oauth2.client.trusted) {
+          req.body.transaction_id = req.oauth2.transactionID;
+
+          // Create a new middleware sequence processing decision
+          var seq = new ConnectSequence(req, res, next)
+          seq.appendList(decisionMiddleware);
+          seq.run();
+          return;
+        }
+
+        res.render('dialog', {
+          transactionID: req.oauth2.transactionID,
+          user: req.oauth2.user,
+          client: req.oauth2.client,
+          scopes: scopes,
+          already_authorized: matches.total != 0,
+          oauth: config,
+          error: req.flash('error'),
+          azuread_url: req.azuread_url
+        });
+      })
+      .catch(err => next(err))
     },
 
     // Custom error handler to convert oauth2orize error back to feathers errors

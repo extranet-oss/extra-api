@@ -3,6 +3,11 @@
 error: {{this}}<br>
 {{/each}}
 <br>
+{{#if already_authorized}}
+already authorized, requesting new scopes<br>
+{{else}}
+never authorized<br>
+{{/if}}
 scopes: {{scopes}}<br>
 <br>
 <form action="{{oauth.endpoints.decision}}" method="post">
