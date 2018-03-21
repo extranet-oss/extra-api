@@ -28,14 +28,14 @@ module.exports = function (app, server) {
             id: data.user_id
           }
         })
-        .then(matches => {
-          if (matches.total == 0)
-            return done(null, false);
+          .then(matches => {
+            if (matches.total == 0)
+              return done(null, false);
 
-          // Generate tokens
-          gen_tokens(app, client, matches.data[0], data.scopes, true, done);
-        })
-        .catch(err => done(err));
+            // Generate tokens
+            gen_tokens(app, client, matches.data[0], data.scopes, true, done);
+          })
+          .catch(err => done(err));
 
       })
       .catch((err) => {
@@ -47,8 +47,8 @@ module.exports = function (app, server) {
   // Setup client_credentials exchange
   server.exchange(oauth2orize.exchange.clientCredentials({ userProperty }, (client, scope, done) => {
 
-      // Generate tokens
-      gen_tokens(app, client, null, scope, true, done);
+    // Generate tokens
+    gen_tokens(app, client, null, scope, true, done);
   }));
 
 };

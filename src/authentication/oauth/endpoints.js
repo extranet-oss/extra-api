@@ -12,9 +12,9 @@ module.exports = function (app, server, middlewares) {
   const userProperty = app.get('authentication').entity;
 
   const decisionMiddleware = server.decision({ userProperty }, (req, done) => {
-      // scopes can be modified here
-      return done(null, {});
-    });
+    // scopes can be modified here
+    return done(null, {});
+  });
 
   // Authorize dialog endpoint
   app.get(config.endpoints.authorize,
@@ -26,7 +26,7 @@ module.exports = function (app, server, middlewares) {
     // Check if user is logged in, if not, show login screen
     (req, res, next) => {
       var next_parsed = url.parse(req.url, true),
-        next_url = `${next_parsed.pathname}?${querystring.stringify(omit(next_parsed.query, ['bypass']))}`
+        next_url = `${next_parsed.pathname}?${querystring.stringify(omit(next_parsed.query, ['bypass']))}`;
 
       var azuread = app.get('azuread').endpoints.auth;
       req.azuread_url = `${azuread}?next=${encodeURIComponent(next_url)}`;
@@ -97,7 +97,7 @@ module.exports = function (app, server, middlewares) {
           req.body.transaction_id = req.oauth2.transactionID;
 
           // Create a new middleware sequence processing decision
-          var seq = new ConnectSequence(req, res, next)
+          var seq = new ConnectSequence(req, res, next);
           seq.appendList(decisionMiddleware);
           seq.run();
           return;
@@ -114,7 +114,7 @@ module.exports = function (app, server, middlewares) {
           azuread_url: req.azuread_url
         });
       })
-      .catch(err => next(err))
+        .catch(err => next(err));
     },
 
     // Custom error handler to convert oauth2orize error back to feathers errors
@@ -122,7 +122,7 @@ module.exports = function (app, server, middlewares) {
       if (err instanceof AuthorizationError) {
         err = new errors[err.status](err);
       }
-      next(err)
+      next(err);
     }
   );
 
@@ -150,7 +150,7 @@ module.exports = function (app, server, middlewares) {
       if (err instanceof AuthorizationError) {
         err = new errors[err.status](err);
       }
-      next(err)
+      next(err);
     }
   );
 

@@ -27,7 +27,7 @@ module.exports = function (middlewares) {
 
             // deny login if user is suspended
             if (matches.data[0].suspended)
-              return done(null, false, `Account suspended: ${matches.data[0].suspended_reason ? matches.data[0].suspended_reason : 'no info'}`)
+              return done(null, false, `Account suspended: ${matches.data[0].suspended_reason ? matches.data[0].suspended_reason : 'no info'}`);
 
             done(null, matches.data[0]);
           })

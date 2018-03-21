@@ -2,12 +2,12 @@ const errors = require('feathers-errors');
 
 module.exports = function (scopes = []) {
   if (!scopes || !scopes.length) {
-    throw new Error(`You need to provide an array of 'scopes' to check against.`);
+    throw new Error('You need to provide an array of \'scopes\' to check against.');
   }
 
   return function (hook) {
     if (hook.type !== 'before') {
-      throw new Error(`The 'restrictToScopes' hook should only be used as a 'before' hook.`);
+      throw new Error('The \'restrictToScopes\' hook should only be used as a \'before\' hook.');
     }
 
     // If it was an internal call then skip this hook
@@ -30,5 +30,5 @@ module.exports = function (scopes = []) {
     }
 
     return hook;
-  }
-}
+  };
+};

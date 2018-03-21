@@ -47,7 +47,7 @@ app.configure(services);
 // Configure a middleware for 404s and the error handler
 app.use(notFound());
 app.use(handler({
-  html: (err, req, res, next) => {
+  html: (err, req, res) => {
     res.set('Content-Type', 'text/html');
     res.render('error', err);
   }

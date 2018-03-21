@@ -31,17 +31,17 @@ class CustomVerifier {
 
     // Define default results
     var new_payload = {
-          sub: 'extra-api:access_token',
-          client: null,
-          user: null,
-          scopes: []
-        },
-        result = {
-          client: null,
-          user: null,
-          authorization: null,
-          scopes: []
-        };
+        sub: 'extra-api:access_token',
+        client: null,
+        user: null,
+        scopes: []
+      },
+      result = {
+        client: null,
+        user: null,
+        authorization: null,
+        scopes: []
+      };
 
     // Load services
     const clients = this.app.service('oauth/clients');
@@ -59,61 +59,61 @@ class CustomVerifier {
         validity_token: payload.client.validity
       }
     })
-    .then(matches => {
-      if (matches.total == 0)
-        return done(null, false);
+      .then(matches => {
+        if (matches.total == 0)
+          return done(null, false);
 
-      // Save client
-      result.client = matches.data[0];
-      new_payload.client = {
-        id: result.client.id,
-        validity: result.client.validity_token
-      };
+        // Save client
+        result.client = matches.data[0];
+        new_payload.client = {
+          id: result.client.id,
+          validity: result.client.validity_token
+        };
 
-      // If associated user, process user
-      if (payload.user) {
-        users.find({
-          query: { id: payload.user.id }
-        })
-        .then(matches => {
-          if (matches.total == 0)
-            return done(null, false);
-
-          // Save user
-          result.user = matches.data[0];
-          new_payload.user = {
-            id: result.user.id,
-            authorization: null
-          };
-
-          // deny login if user is suspended
-          if (result.user.suspended)
-            return done(null, false, `Account suspended: ${result.user.suspended_reason ? result.user.suspended_reason : 'no info'}`)
-
-          // Check if authorization is valid
-          authorizations.find({
-            query: { id: payload.user.authorization }
+        // If associated user, process user
+        if (payload.user) {
+          users.find({
+            query: { id: payload.user.id }
           })
-          .then(matches => {
-            if (matches.total == 0)
-              return done(null, false);
+            .then(matches => {
+              if (matches.total == 0)
+                return done(null, false);
 
-            // Save authorization
-            result.authorization = matches.data[0];
-            new_payload.user.authorization = result.authorization.id;
+              // Save user
+              result.user = matches.data[0];
+              new_payload.user = {
+                id: result.user.id,
+                authorization: null
+              };
 
-            // finalize
-            done(null, result, new_payload);
-          })
-          .catch(err => done(err));
-        })
-        .catch(err => done(err));
-      }
-      else {
-        done(null, result, new_payload);
-      }
-    })
-    .catch(err => done(err));
+              // deny login if user is suspended
+              if (result.user.suspended)
+                return done(null, false, `Account suspended: ${result.user.suspended_reason ? result.user.suspended_reason : 'no info'}`);
+
+              // Check if authorization is valid
+              authorizations.find({
+                query: { id: payload.user.authorization }
+              })
+                .then(matches => {
+                  if (matches.total == 0)
+                    return done(null, false);
+
+                  // Save authorization
+                  result.authorization = matches.data[0];
+                  new_payload.user.authorization = result.authorization.id;
+
+                  // finalize
+                  done(null, result, new_payload);
+                })
+                .catch(err => done(err));
+            })
+            .catch(err => done(err));
+        }
+        else {
+          done(null, result, new_payload);
+        }
+      })
+      .catch(err => done(err));
 
   }
 }
