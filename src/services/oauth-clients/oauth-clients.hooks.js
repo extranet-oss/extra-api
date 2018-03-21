@@ -1,9 +1,9 @@
-const { authenticate } = require('@feathersjs/authentication').hooks;
+const { authenticate } = require('../../hooks/authentication');
 const jsonifyFields = require('../../hooks/jsonify-fields');
 
 module.exports = {
   before: {
-    all: [ authenticate('jwt'), jsonifyFields(['redirect_uris', 'required_permissions']) ],
+    all: [ authenticate('both'), jsonifyFields(['redirect_uris', 'required_permissions']) ],
     find: [],
     get: [],
     create: [],
