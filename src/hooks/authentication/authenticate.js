@@ -23,11 +23,11 @@ module.exports = function (type = 'both') {
           throw new errors.NotAuthenticated(`The auth info is missing. You must not be authenticated.`);
         }
 
-        if ((type == 'user' || type == 'both') && !hook.params.auth.user) {
+        if ((type == 'user' || type == 'both') && !hook.params.auth.user && !hook.params.auth.client) {
           throw new errors.NotAuthenticated(`User is not authenticated.`);
         }
 
-        if ((type == 'client' || type == 'both') && (!hook.params.auth.client || hook.params.auth.user)) {
+        if (type == 'client' && (!hook.params.auth.client || hook.params.auth.user)) {
           throw new errors.NotAuthenticated(`Client is not authenticated.`);
         }
 
