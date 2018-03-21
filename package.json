@@ -53,7 +53,6 @@
     "lodash": "^4.17.5",
     "mysql2": "^1.5.2",
     "oauth2orize": "^1.11.0",
-    "passport-auth-token": "^1.0.1",
     "passport-azure-ad": "^3.0.10",
     "passport-oauth2-client-password": "^0.1.2",
     "passport-strategy": "^1.0.0",
