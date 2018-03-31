@@ -6,10 +6,39 @@ const DataTypes = Sequelize.DataTypes;
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
   const locationsCities = sequelizeClient.define('locations_cities', {
-    text: {
+
+    // city identifiers
+    id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      unique: true,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
+    intra_id: {
+      type: DataTypes.STRING(320),
+      allowNull: false,
+      unique: true
+    },
+
+    // human friendly identifier
+    slug: {
+      type: DataTypes.STRING(3),
+      allowNull: false,
+      unique: true
+    },
+
+    // city infos
+    disabled: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      default: false
+    },
+    name: {
       type: DataTypes.STRING,
       allowNull: false
-    }
+    },
+
   }, {
     hooks: {
       beforeCount(options) {
@@ -22,6 +51,8 @@ module.exports = function (app) {
   locationsCities.associate = function (models) {
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
+
+    this.belongsTo(models.locations_countries, { as: 'country' });
   };
 
   return locationsCities;
