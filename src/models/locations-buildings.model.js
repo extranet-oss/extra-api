@@ -54,6 +54,7 @@ module.exports = function (app) {
 
     this.belongsTo(models.locations_countries, { as: 'country' });
     this.belongsTo(models.locations_cities, { as: 'city' });
+    this.hasMany(models.locations_rooms, { as: 'rooms', foreignKey: 'building_id' });
   };
 
   return locationsBuildings;

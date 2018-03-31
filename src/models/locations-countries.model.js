@@ -51,6 +51,10 @@ module.exports = function (app) {
   locationsCountries.associate = function (models) {
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
+
+    this.hasMany(models.locations_cities, { as: 'cities', foreignKey: 'country_id' });
+    this.hasMany(models.locations_buildings, { as: 'buildings', foreignKey: 'country_id' });
+    this.hasMany(models.locations_rooms, { as: 'rooms', foreignKey: 'country_id' });
   };
 
   return locationsCountries;
