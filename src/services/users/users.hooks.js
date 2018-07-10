@@ -1,10 +1,12 @@
-
-
+const authentication = require('@feathersjs/authentication');
 const hideMongooseInternals = require('../../hooks/hide-mongoose-internals');
 
 module.exports = {
   before: {
-    all: [hideMongooseInternals()],
+    all: [
+      authentication.hooks.authenticate('jwt'),
+      hideMongooseInternals()
+    ],
     find: [],
     get: [],
     create: [],

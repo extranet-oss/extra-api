@@ -2,6 +2,9 @@ const authentication = require('@feathersjs/authentication');
 const jwt = require('@feathersjs/authentication-jwt');
 const jwksClient = require('jwks-rsa');
 const jwtParser = require('jsonwebtoken');
+const AuthTokenStrategy = require('passport-auth-token');
+const fs = require('fs');
+const path = require('path');
 
 module.exports = function (app) {
   const config = app.get('authentication');
@@ -15,7 +18,7 @@ module.exports = function (app) {
   // Set up authentication with the secret
   app.configure(authentication({
     secret: config.secret,
-    strategies: ['jwt'],
+    strategies: ['jwt', 'token'],
     path: '/authentication',
     session: false,
     jwt: {
@@ -46,13 +49,32 @@ module.exports = function (app) {
     }
   }));
 
+  // Set up internal token authentication
+  app.passport.use('token', new AuthTokenStrategy(
+    function authTokenVerifier(token, done) {
+      fs.readFile(path.join(__dirname, '../config/tokenstore.json'), 'utf8', function(err, data) {
+        if (err) return done(err);
+
+        try {
+          var tokens = JSON.parse(data);
+        } catch(err) {
+          return done(err);
+        }
+
+        if (tokens.find(x => x == token))
+          return done(null, {});
+        done(null, false, { message: 'Invalid auth token' });
+      });
+    }
+  ));
+
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
   // to create a new valid JWT (e.g. local or oauth2)
   app.service('authentication').hooks({
     before: {
       create: [
-        authentication.hooks.authenticate(['jwt']),
+        authentication.hooks.authenticate(['jwt', 'token']),
 
         // Prevent jwt to be regenerated
         function keepJWT(context) {
