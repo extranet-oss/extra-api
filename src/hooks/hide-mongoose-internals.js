@@ -5,14 +5,24 @@
 module.exports = function (options = {}) {
   return async context => {
 
-    if (context.type == 'before' && context.data) {
-
-      function cleanBefore(object) {
-        for (key in object) {
-          if (object.hasOwnProperty(key) && key.startsWith('_'))
-            delete object[key];
-        }
+    function cleanBefore(object) {
+      for (let key in object) {
+        if (object.hasOwnProperty(key) && key.startsWith('_'))
+          delete object[key];
       }
+    }
+
+    function cleanAfter(object) {
+      if (object._id)
+        object.id = object._id;
+
+      for (let key in object) {
+        if (object.hasOwnProperty(key) && key.startsWith('_'))
+          delete object[key];
+      }
+    }
+
+    if (context.type == 'before' && context.data) {
 
       if (Array.isArray(context.data))
         context.data.forEach(cleanBefore);
@@ -21,16 +31,6 @@ module.exports = function (options = {}) {
     }
 
     else if (context.type == 'after') {
-
-      function cleanAfter(object) {
-        if (object._id)
-          object.id = object._id;
-
-        for (key in object) {
-          if (object.hasOwnProperty(key) && key.startsWith('_'))
-            delete object[key];
-        }
-      }
 
       let data = context.result.data || context.result;
 
