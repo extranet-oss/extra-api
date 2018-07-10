@@ -6,5 +6,13 @@
     "default": 10,
     "max": 50
   },
-  "mongodb": "mongodb://localhost:27017/extranet"
+  "mongodb": "mongodb://localhost:27017/extranet",
+  "authentication": {
+    "secret": "f205ba286c11839c522108877e8f7f063f954a37eb746e585ec84bcfea7d6f985fc8d1caec7b409b25506f99f6bb1f59b607285ff83d95f95048a6fd59437a33f0183740f18027f22d08e3c0dcee509843bd9cbfe1ea2f1bbc6d34ae55f46527f20b1718a44e1b95b2e7fd957bde373579661460931b23fc72733d15b1ce2bcb296bc2ddf7ee1caa2fc0a45e2b38b181ab819cbea6fbbc5d01353f4263522059ad3efbed61ef9421aec6459b2f34c4795a2b54bbc25b98da356984890f646f4784ad42ede6424f76aaa55d3f062d75978b168d069e7bcadad054e102ca2836478134178cdb07e0fb31d5150b366fcfa6fbc50ac4bb5c55874a2e1423aec8b634",
+    "hosts": {
+      "login": "http://login.local.tryextra.net",
+      "api": "http://api.local.tryextra.net"
+    },
+    "jwks_endpoint": "/discovery/keys"
+  }
 }
