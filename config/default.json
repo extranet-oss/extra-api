@@ -13,6 +13,6 @@
       "login": "https://login.local.tryextra.net",
       "api": "https://api.local.tryextra.net"
     },
-    "jwks_endpoint": "/discovery/keys"
+    "jwks_endpoint": "http://127.0.0.1:3000/discovery/keys"
   }
 }

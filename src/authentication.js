@@ -12,7 +12,7 @@ module.exports = function (app) {
   const keyProvider = jwksClient({
     cache: true,
     rateLimit: true,
-    jwksUri: `${config.hosts.login}${config.jwks_endpoint}`
+    jwksUri: `${config.jwks_endpoint}`
   });
 
   // Set up authentication with the secret
@@ -63,7 +63,7 @@ module.exports = function (app) {
 
         if (tokens.find(x => x == token))
           return done(null, {});
-        done(null, false, { message: 'Invalid auth token' });
+        done(null, false, 'Invalid auth token');
       });
     }
   ));
