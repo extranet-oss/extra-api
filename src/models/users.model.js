@@ -27,7 +27,8 @@ module.exports = function (app) {
     suspended: { type: Boolean, required: true, default: false },
     suspended_reason: { type: String }
   }, {
-    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    minimize: false
   });
 
   return mongooseClient.model('users', users);
