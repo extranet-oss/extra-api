@@ -1,14 +1,14 @@
 // Use this hook to manipulate incoming or outgoing data.
 // For more information on hooks see: http://docs.feathersjs.com/api/hooks.html
 const ObjectID64 = require('objectid64')();
-const { NotFound } = require('@feathersjs/errors');
+const { BadRequest } = require('@feathersjs/errors');
 
 // eslint-disable-next-line no-unused-vars
 module.exports = function (options = {}) {
 
-  function decode(id) {
+  function decode(id, path) {
     if (!/^[0-9A-Za-z_-]{16}$/.test(id))
-      throw new NotFound(`No record found for id '${id}'`);
+      throw new BadRequest(`Invalid identifier value "${id}" at path "${path}"`);
 
     return ObjectID64.decode(id);
   }
@@ -17,15 +17,37 @@ module.exports = function (options = {}) {
     return ObjectID64.encode(id.toString());
   }
 
+  function cleanBefore(data, prefix = '') {
+    for (let key in data) {
+      if (data.hasOwnProperty(key)) {
+        if (typeof data[key] === 'object')
+          cleanAfter(data[key], `${key}.`)
+        else if (typeof data[key] === 'string' && key.endsWith('_id'))
+          data[key] = decode(data[key], `${prefix}${key}`);
+      }
+    }
+  }
+
   function cleanAfter(data) {
-    if (data._id)
-      data._id = encode(data._id);
+    for (let key in data) {
+      if (data.hasOwnProperty(key) && key.endsWith('_id'))
+          data[key] = encode(data[key]);
+    }
   }
 
   return async context => {
 
     if (context.type == 'before' && context.id)
-      context.id = decode(context.id);
+      context.id = decode(context.id, 'id');
+
+
+    if (context.type == 'before' && context.data) {
+
+      if (Array.isArray(context.data))
+        context.data.forEach(cleanBefore);
+      else
+        cleanBefore(context.data);
+    }
 
     if (context.type == 'after') {
 
