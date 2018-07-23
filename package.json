@@ -34,6 +34,7 @@
     "mongoose": "^5.2.1",
     "mongoose-type-email": "^1.0.9",
     "mongoose-type-url": "^1.0.4",
+    "objectid64": "^1.0.1",
     "passport-auth-token": "^1.0.1",
     "statuses": "^1.5.0",
     "winston": "^3.0.0"

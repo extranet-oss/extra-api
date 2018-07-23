@@ -1,11 +1,13 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const hideMongooseInternals = require('../../hooks/hide-mongoose-internals');
+const ObjectID64 = require('../../hooks/object-id-64');
 
 module.exports = {
   before: {
     all: [
       authenticate('jwt'),
-      hideMongooseInternals()
+      hideMongooseInternals(),
+      ObjectID64()
     ],
     find: [],
     get: [],
@@ -16,7 +18,10 @@ module.exports = {
   },
 
   after: {
-    all: [ hideMongooseInternals() ],
+    all: [
+      ObjectID64(),
+      hideMongooseInternals()
+    ],
     find: [],
     get: [],
     create: [],
