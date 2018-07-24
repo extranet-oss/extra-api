@@ -49,6 +49,13 @@ module.exports = function (options = {}) {
         cleanBefore(context.data);
     }
 
+    if (context.type == 'before' && context.params.query) {
+      for (let key in context.params.query) {
+        if (context.params.query.hasOwnProperty(key) && key.endsWith('_id'))
+            context.params.query[key] = decode(context.params.query[key], key);
+      }
+    }
+
     if (context.type == 'after') {
 
       let data = context.result.data || context.result;
