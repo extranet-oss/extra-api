@@ -9,7 +9,7 @@ module.exports = function (app) {
   const users = new Schema({
 
     // intranet relations
-    intra_id: { type: String, required: true, unique: true },
+    intra_code: { type: String, required: true, unique: true },
 
     // basic personnal data
     slug: { type: String, required: true, unique: true, lowercase: true },
