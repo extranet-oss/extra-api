@@ -10,10 +10,11 @@
     "node": "^10.0.0",
     "npm": ">= 3.0.0"
   },
+  "bin": "./bin/www",
   "scripts": {
     "test": "npm run eslint && npm run mocha",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
-    "start": "node src/",
+    "start": "node ./bin/www/",
     "watch": "nodemon --watch src/ --watch config/ --ext js,json,hbs --exec npm start",
     "mocha": "mocha test/ --recursive --exit"
   },
